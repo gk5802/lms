@@ -1,14 +1,21 @@
-// ThemeToggle.tsx
-
 "use client";
 
 import { useTheme } from "next-themes";
 import { Sun, Moon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
 
-// Button to toggle between light/dark theme
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme();
+
+  // This will ensure the component only renders after the client has mounted
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
 
   return (
     <Button

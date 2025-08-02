@@ -3,8 +3,10 @@
 import "./globals.css";
 import { Inter } from "next/font/google";
 import { ReactNode } from "react";
-import { ThemeProvider } from "@/components/ui/theme-provider";
 import Header from "@/components/Header";
+import { ThemeProvider } from "@/components/ui/theme-provider";
+import Link from "next/link";
+import AntiInspect from "@/components/DisabledInspect";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,6 +22,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body
         className={`${inter.className} bg-background text-foreground transition-colors`}
       >
+        <AntiInspect />
         {/* ThemeProvider handles light/dark theme using system preference or toggle */}
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           {/* Branded motivational header */}
@@ -31,9 +34,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           {/* Footer with T&C */}
           <footer className="text-center text-sm mt-10 text-muted-foreground">
             By using this app, you agree to our{" "}
-            <a href="/terms" className="underline hover:text-primary">
+            <Link href="/terms" className="underline hover:text-primary">
               Terms & Conditions
-            </a>
+            </Link>
             .
           </footer>
         </ThemeProvider>
