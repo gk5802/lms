@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Eye, EyeOff } from "lucide-react";
 import Image from "next/image";
+import { cookies } from "next/headers";
 
 export default function LoginPage() {
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -34,34 +35,41 @@ export default function LoginPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
-
       const data = await res.json();
-
       if (!res.ok) {
         setError(data.message || "Login failed.");
         return;
       }
-
+      // After successful fetch...
+      (await
+        // After successful fetch...
+        cookies()).set("token", data.token, {
+        httpOnly: true,
+        sameSite: "strict",
+        path: "/",
+        maxAge: 60 * 60 * 24 * 7, // 7 days
+      });
       // Redirect to dashboard on success
       window.location.href = "/dashboard";
-    } catch (err) {
+    } catch {
       setError("Something went wrong.");
     }
   };
 
   return (
-      <div className="max-w-md mx-auto mt-10 bg-card rounded-xl shadow-lg p-6 space-y-6 ">
-          <div className="w-full h-full justify-center items-center flex ">
-              
-        <Image src="/bowler.jpg" alt="logo" height={100} width={100}/>
-          </div>
+    <div className="max-w-md mx-auto mt-10 bg-card rounded-xl shadow-lg p-6 space-y-6 ">
+      <div className="w-full h-full justify-center items-center flex ">
+        <Image src="/bowler.jpg" alt="logo" height={100} width={100} />
+      </div>
       <h2 className="text-xl font-bold text-center text-primary">
         Welcome Back
-          </h2>
+      </h2>
 
       <form onSubmit={handleLogin} className="space-y-4">
         <div>
-          <Label className="mb-2" htmlFor="email">Email</Label>
+          <Label className="mb-2" htmlFor="email">
+            Email
+          </Label>
           <Input
             id="email"
             type="email"
@@ -73,7 +81,9 @@ export default function LoginPage() {
         </div>
 
         <div>
-          <Label className="mb-2" htmlFor="password">Password</Label>
+          <Label className="mb-2" htmlFor="password">
+            Password
+          </Label>
           <div className="relative">
             <Input
               id="password"
